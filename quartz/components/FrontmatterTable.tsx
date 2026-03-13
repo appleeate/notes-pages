@@ -18,8 +18,13 @@ const FrontmatterTable: QuartzComponent = ({ fileData, displayClass }: QuartzCom
   const fm = fileData.frontmatter
   if (!fm) return null
 
+  const hidden = new Set(["created", "modified", "published", "title"])
+
   const entries = Object.entries(fm)
-    .filter(([_, v]) => v !== undefined && v !== null && String(v).trim() !== "")
+    .filter(([k, v]) => {
+      if (hidden.has(k)) return false
+      return v !== undefined && v !== null && String(v).trim() !== ""
+    })
     .sort(([a], [b]) => a.localeCompare(b))
 
   if (entries.length === 0) return null
@@ -30,18 +35,14 @@ const FrontmatterTable: QuartzComponent = ({ fileData, displayClass }: QuartzCom
         <span class="frontmatter-title">Properties</span>
         <span class="frontmatter-count">{entries.length}</span>
       </summary>
-      <table>
-        <tbody>
-          {entries.map(([k, v]) => (
-            <tr>
-              <th>
-                <span class="frontmatter-key">{k}</span>
-              </th>
-              <td>{formatValue(v)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div class="frontmatter-grid">
+        {entries.map(([k, v]) => (
+          <>
+            <div class="frontmatter-key">{k}</div>
+            <div class="frontmatter-value">{formatValue(v)}</div>
+          </>
+        ))}
+      </div>
     </details>
   )
 }
@@ -79,47 +80,24 @@ FrontmatterTable.css = `
   color: var(--darkgray);
 }
 
-.frontmatter table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+.frontmatter-grid {
   margin-top: 0.6rem;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: 12rem 1fr;
+  column-gap: 0.75rem;
+  row-gap: 0.35rem;
+  padding: 0.6rem;
   border-radius: 8px;
-}
-
-.frontmatter tr:nth-child(odd) {
   background: var(--light);
 }
 
-.frontmatter tr:nth-child(even) {
-  background: color-mix(in srgb, var(--light) 70%, transparent);
-}
-
-.frontmatter th,
-.frontmatter td {
-  padding: 0.45rem 0.6rem;
-  border-top: 1px solid var(--lightgray);
-  vertical-align: top;
-}
-
-.frontmatter tr:first-child th,
-.frontmatter tr:first-child td {
-  border-top: none;
-}
-
-.frontmatter th {
-  width: 12rem;
+.frontmatter-key {
   color: var(--darkgray);
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
-.frontmatter-key {
-  font-family: var(--code-font);
-  font-size: 0.9rem;
-}
-
-.frontmatter td {
+.frontmatter-value {
   white-space: pre-wrap;
   word-break: break-word;
 }
