@@ -17,7 +17,7 @@ const config: QuartzConfig = {
     },
     locale: "zh-CN",
     baseUrl: "notes.xudongjia.dpdns.org",
-    ignorePatterns: ["private", "templates", ".obsidian", ".git"],
+    ignorePatterns: ["private", "templates", ".obsidian", ".git", "**/*账号密码*"],
     defaultDateType: "modified",
     theme: {
       fontOrigin: "googleFonts",
