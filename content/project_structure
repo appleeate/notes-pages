@@ -1,0 +1,6 @@
+.obsidian/
+  ├── platforms/
+  │   ├── desktop/    # 桌面端配置
+  │   └── mobile/     # 手机端配置
+  ├── app.json        # 通用配置
+  └── core/           # 核心配置 
